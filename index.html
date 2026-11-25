@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Меню на бюджет</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --bg:#f5f6f1; --bg-a:rgba(245,246,241,.86);
+  --sf:#ffffff; --sf2:#fafbf7;
+  --tx:#18241b; --mu:#6d7769;
+  --ac:#2f7d3a; --ac2:#e9f3e5;
+  --ln:#e3e7db;
+  --wa:#b4531a; --wa2:#fdf0e6;
+  --r:18px;
+  --shadow:0 1px 2px rgba(24,36,27,.04), 0 12px 32px -18px rgba(24,36,27,.22);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#111713; --bg-a:rgba(17,23,19,.86);
+    --sf:#1a221c; --sf2:#202a23;
+    --tx:#e8efe6; --mu:#94a08f;
+    --ac:#6fcf7b; --ac2:#233428;
+    --ln:#2b352e;
+    --wa:#f0a070; --wa2:#3a2a1e;
+    --shadow:0 1px 2px rgba(0,0,0,.25), 0 12px 32px -18px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:16px}
+body{
+  margin:0;min-height:100vh;
+  background:radial-gradient(900px 480px at 50% -220px, rgba(47,125,58,.10), transparent 70%),var(--bg);
+  color:var(--tx);font:16px/1.5 Onest,system-ui,-apple-system,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+main{max-width:720px;margin:0 auto;padding:24px 16px 56px}
+.hero{margin-bottom:20px}
+.hero .logo{display:grid;place-items:center;width:46px;height:46px;border-radius:15px;background:var(--ac2);font-size:23px;margin-bottom:12px;box-shadow:inset 0 0 0 1px rgba(47,125,58,.12)}
+h1{font-size:31px;line-height:1.08;margin:0 0 8px;font-weight:800;letter-spacing:-.025em}
+.lead{color:var(--mu);margin:0;font-size:15.5px}
+section{background:var(--sf);border:1px solid var(--ln);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
+h2{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;margin:0 0 14px;letter-spacing:-.01em}
+h2 .ic{display:grid;place-items:center;width:30px;height:30px;border-radius:10px;background:var(--ac2);font-size:15px;flex:none}
+.note{font-size:13px;color:var(--mu);margin:10px 0 0;line-height:1.45}
+.note.tight{margin:-8px 0 12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field>span{font-size:13px;color:var(--mu);font-weight:500;padding-left:2px}
+.field input,.field select{width:100%;padding:12px 14px;font:inherit;font-weight:600;font-size:16px;color:var(--tx);background:var(--sf2);border:1.5px solid var(--ln);border-radius:12px;transition:border-color .15s, box-shadow .15s, background .15s;appearance:none;-webkit-appearance:none}
+.field select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%236d7769' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+.field input:focus,.field select:focus{outline:none;border-color:var(--ac);background:var(--sf);box-shadow:0 0 0 3.5px rgba(47,125,58,.16)}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative;flex:none}
+.chip input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;z-index:1}
+.chip>span{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border:1.5px solid var(--ln);border-radius:999px;font-size:14px;font-weight:500;background:var(--sf2);white-space:nowrap;transition:background .15s,border-color .15s,color .15s,transform .1s;user-select:none}
+.chip>span::before{content:"";width:17px;height:17px;border-radius:50%;flex:none;border:1.5px solid var(--ln);background:var(--sf);display:grid;place-items:center;font-size:10px;font-weight:800;line-height:1;color:var(--ac);transition:background .15s,border-color .15s}
+.chip input:checked+span{background:var(--ac);border-color:var(--ac);color:#fff}
+.chip input:checked+span::before{content:"✓";background:var(--sf);border-color:var(--sf)}
+.chip input:active+span{transform:scale(.97)}
+.chip input:focus-visible+span,button:focus-visible,input:focus-visible,select:focus-visible{outline:2.5px solid var(--ac);outline-offset:2px}
+.stores{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;max-height:300px;overflow-y:auto;overscroll-behavior:contain;padding:2px 4px 2px 2px;margin:-2px;scrollbar-width:thin;scrollbar-color:var(--ln) transparent}
+.stores::-webkit-scrollbar{width:6px}
+.stores::-webkit-scrollbar-thumb{background:var(--ln);border-radius:99px}
+.store{position:relative;display:flex;align-items:center;gap:9px;padding:9px 11px;border:1.5px solid var(--ln);border-radius:12px;background:var(--sf2);cursor:pointer;font-size:14px;font-weight:500;transition:border-color .15s,background .15s,box-shadow .15s}
+.store input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;z-index:1}
+.store .lg{width:26px;height:26px;border-radius:8px;flex:none;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:800;letter-spacing:-.03em}
+.store .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.store.on{border-color:var(--ac);background:var(--ac2);box-shadow:0 0 0 3px rgba(47,125,58,.12)}
+.store.has-api .lg::after{content:"";display:block;position:absolute;top:0;right:0;width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 2px var(--sf2)}
+.switch{display:inline-flex;align-items:center;gap:11px;cursor:pointer;font-size:15px;font-weight:500;position:relative}
+.switch input{position:absolute;opacity:0;width:0;height:0}
+.switch .tr{width:46px;height:27px;border-radius:999px;background:var(--ln);position:relative;transition:background .2s;flex:none}
+.switch .tr::after{content:"";position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked+.tr{background:var(--ac)}
+.switch input:checked+.tr::after{transform:translateX(19px)}
+.switch input:focus-visible+.tr{outline:2.5px solid var(--ac);outline-offset:2px}
+.dock{position:sticky;bottom:0;z-index:20;margin:16px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--bg-a);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);border-top:1px solid var(--ln)}
+.go{width:100%;padding:16px;font:inherit;font-weight:700;font-size:17px;background:linear-gradient(180deg,color-mix(in srgb,var(--ac) 92%,#fff),var(--ac));color:#fff;border:0;border-radius:14px;cursor:pointer;box-shadow:0 8px 20px -10px rgba(47,125,58,.75);transition:transform .1s,box-shadow .15s}
+.go:active{transform:scale(.985);box-shadow:0 4px 12px -8px rgba(47,125,58,.8)}
+.sm{padding:10px 16px;font:inherit;font-size:14px;font-weight:600;background:var(--ac2);color:var(--tx);border:1.5px solid var(--ln);border-radius:11px;cursor:pointer;transition:background .15s,border-color .15s}
+.sm:hover{border-color:var(--ac)}
+.sm:disabled{opacity:.6;cursor:wait}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+#res{display:none}
+.sum{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.sum .lbl{font-size:13px;color:var(--mu);font-weight:500}
+.big{font-size:36px;font-weight:800;line-height:1.05;letter-spacing:-.03em;margin-top:2px}
+.pill{display:inline-block;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700}
+.pill.ok{background:var(--ac2);color:var(--ac)}
+.pill.bad{background:var(--wa2);color:var(--wa)}
+.prog{height:10px;border-radius:999px;background:var(--ln);overflow:hidden;margin:14px 0 8px}
+.prog>i{display:block;height:100%;width:0;border-radius:999px;transition:width .45s cubic-bezier(.22,1,.36,1)}
+.meta{font-size:13px;color:var(--mu)}
+.day{border-top:1px solid var(--ln);padding:14px 0}
+.day:first-child{border-top:0;padding-top:0}
+.day-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.day-h b{font-size:15px;font-weight:700}
+.day-h span{font-size:14px;color:var(--mu);font-weight:600}
+.meal-box{border-radius:12px;transition:background .15s}
+.meal-box[open]{background:var(--sf2);padding:0 12px 4px;margin:0 -12px}
+.meal{display:flex;align-items:center;gap:10px;padding:9px 0;cursor:pointer;list-style:none}
+.meal::-webkit-details-marker{display:none}
+.mtag{font-style:normal;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--ac);background:var(--ac2);padding:5px 8px;border-radius:8px;flex:none;min-width:66px;text-align:center}
+.mn{flex:1;min-width:0;font-size:15px;font-weight:500;line-height:1.28}
+.mn small{display:block;color:var(--mu);font-size:12px;font-weight:400;margin-top:2px}
+.meal em{font-style:normal;font-size:14px;color:var(--mu);font-weight:600;white-space:nowrap}
+.kb{margin-top:10px;padding:9px 12px;border-radius:10px;background:var(--sf2);font-size:12.5px;color:var(--mu);line-height:1.5}
+.ok{color:var(--ac);font-weight:600}
+.bad{color:var(--wa);font-weight:600}
+.rcp{padding:4px 0 10px;font-size:14px;line-height:1.5}
+.rcp-head{font-size:12.5px;font-weight:600;color:var(--ac);padding-bottom:8px;margin-bottom:6px;border-bottom:1px dashed var(--ln)}
+.rcp ol{margin:6px 0 0;padding-left:20px}
+.rcp ol li{margin:4px 0}
+.rcp small{display:block;margin-top:10px;font-size:12px;color:var(--mu)}
+.sl{list-style:none;margin:0;padding:0}
+.sl li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--ln)}
+.sl li:first-child{border-top:0}
+.sl li.empty{color:var(--mu);font-size:14px;justify-content:flex-start}
+.sl label{display:flex;align-items:center;gap:11px;cursor:pointer;flex:1;min-width:0}
+.sl input{width:20px;height:20px;accent-color:var(--ac);flex:none;cursor:pointer;border-radius:6px}
+.sl label span{overflow:hidden;text-overflow:ellipsis}
+.sl li.dn label span{text-decoration:line-through;color:var(--mu)}
+.sl .pr{font-size:14px;color:var(--mu);font-weight:600;white-space:nowrap}
+.bar{margin-top:14px;padding:14px;border-radius:14px;background:var(--sf2);border:1px solid var(--ln);font-size:14px}
+.bar div{display:flex;justify-content:space-between;padding:3.5px 0}
+.bar div b{font-weight:700}
+.bar .tot-line{border-top:1px dashed var(--ln);margin-top:7px;padding-top:10px}
+.own{color:var(--mu);font-size:13px;margin-top:12px;line-height:1.5}
+.online-status{font-size:13px;margin-top:10px;padding:10px 12px;border-radius:10px;display:none;line-height:1.45}
+.online-status.loading{display:block;background:var(--ac2);color:var(--ac)}
+.online-status.ok{display:block;background:var(--ac2);color:var(--ac)}
+.online-status.warn{display:block;background:var(--wa2);color:var(--wa)}
+.online-status.err{display:block;background:var(--wa2);color:var(--wa)}
+.online-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--mu);margin-top:10px}
+.online-tag .dot{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 2px var(--sf2)}
+.online-tag .dot.gray{background:var(--ln)}
+@media (max-width:420px){h1{font-size:27px}.big{font-size:31px}.stores{grid-template-columns:1fr 1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main>
+
+<header class="hero">
+  <div class="logo">🥗</div>
+  <h1>Меню на бюджет</h1>
+  <p class="lead">Укажите сумму, дни и состав семьи — получите меню, рецепты и список покупок.</p>
+</header>
+
+<section>
+  <h2><span class="ic">💳</span>Бюджет и семья</h2>
+  <div class="grid">
+    <label class="field"><span>Сумма, ₽</span><input id="bud" type="number" min="100" step="100" value="5000" inputmode="numeric"></label>
+    <label class="field"><span>Дней</span><input id="days" type="number" min="1" max="14" value="7" inputmode="numeric"></label>
+    <label class="field"><span>Взрослых</span><input id="ad" type="number" min="1" max="10" value="2" inputmode="numeric"></label>
+    <label class="field"><span>Детей</span><input id="kd" type="number" min="0" max="10" value="1" inputmode="numeric"></label>
+  </div>
+</section>
+
+<section>
+  <h2><span class="ic">🏪</span>Магазин</h2>
+  <p class="note tight">Зелёная точка — у сети есть публичный адрес, откуда можно попробовать цены онлайн.</p>
+  <input type="hidden" id="st" value="1">
+  <div class="stores" id="stores"></div>
+  <div class="row" style="margin-top:12px">
+    <button class="sm" id="onlineBtn" type="button">🌐 Обновить цены из выбранного магазина</button>
+  </div>
+  <div id="onlineStatus" class="online-status"></div>
+  <div class="online-tag" id="onlineTag" style="display:none">
+    <span class="dot"></span><span id="onlineTagText"></span>
+  </div>
+  <p class="note">Онлайн-цены — попытка получить актуальные данные с сайта выбранной сети. Большинство магазинов блокируют автоматические запросы, поэтому это работает не всегда. Если не получилось, считаем по средним ценам × коэффициент магазина.</p>
+</section>
+
+<section>
+  <h2><span class="ic">🍽</span>Приёмы пищи</h2>
+  <div class="chips" id="meals">
+    <label class="chip"><input type="checkbox" value="b" checked><span>Завтрак</span></label>
+    <label class="chip"><input type="checkbox" value="l" checked><span>Обед</span></label>
+    <label class="chip"><input type="checkbox" value="d" checked><span>Ужин</span></label>
+  </div>
+</section>
+
+<section>
+  <h2><span class="ic">🧺</span>Что уже есть дома</h2>
+  <div class="chips" id="pan"></div>
+</section>
+
+<section>
+  <h2><span class="ic">🔌</span>Техника на кухне</h2>
+  <p class="note tight">Плита есть по умолчанию.</p>
+  <div class="chips" id="app">
+    <label class="chip"><input type="checkbox" value="o" checked><span>Духовка</span></label>
+    <label class="chip"><input type="checkbox" value="m" checked><span>Микроволновка</span></label>
+    <label class="chip"><input type="checkbox" value="x"><span>Мультиварка</span></label>
+  </div>
+</section>
+
+<section>
+  <h2><span class="ic">🔥</span>КБЖУ</h2>
+  <label class="switch"><input type="checkbox" id="kon"><span class="tr"></span><span>Считаю калории</span></label>
+  <p class="note">КБЖУ блюд показывается всегда. Включите подсчёт, чтобы сравнить рацион с целью.</p>
+  <div id="kbox" style="display:none;margin-top:14px">
+    <label class="field"><span>Цель в день</span>
+      <select id="kmode">
+        <option value="one">На одного человека</option>
+        <option value="all">На всех вместе</option>
+      </select>
+    </label>
+    <div class="grid" style="margin-top:12px">
+      <label class="field"><span>Калории</span><input id="kc" type="number" min="0" value="2000" inputmode="numeric"></label>
+      <label class="field"><span>Белки, г</span><input id="kp" type="number" min="0" value="100" inputmode="numeric"></label>
+      <label class="field"><span>Жиры, г</span><input id="kf" type="number" min="0" value="70" inputmode="numeric"></label>
+      <label class="field"><span>Углеводы, г</span><input id="ku" type="number" min="0" value="250" inputmode="numeric"></label>
+    </div>
+  </div>
+</section>
+
+<div class="dock">
+  <button class="go" id="go">Составить меню</button>
+</div>
+
+<div id="res" style="margin-top:18px">
+  <section class="summary">
+    <div class="sum">
+      <div>
+        <div class="lbl">Примерная стоимость</div>
+        <div class="big" id="tot"></div>
+      </div>
+      <div id="stat"></div>
+    </div>
+    <div class="prog"><i id="progbar"></i></div>
+    <div class="meta" id="budmeta"></div>
+    <div class="row"><button class="sm" id="re">↻ Другой вариант</button></div>
+  </section>
+
+  <section>
+    <h2><span class="ic">📅</span>Меню по дням</h2>
+    <p class="note tight">Нажмите на блюдо, чтобы открыть рецепт.</p>
+    <div id="plan"></div>
+  </section>
+
+  <section>
+    <h2><span class="ic">🛒</span>Список покупок</h2>
+    <ul class="sl" id="shop"></ul>
+    <div class="bar" id="bar"></div>
+    <div class="own" id="own"></div>
+    <div class="row"><button class="sm" id="cp">Скопировать список</button></div>
+    <p class="note">Цены ориентировочные. Если включена онлайн-загрузка и она сработала — используются цены выбранной сети, иначе средние по России × коэффициент магазина.</p>
+  </section>
+</div>
+</main>
+
+<script>
+var PAN=["картофель","макароны","рис","гречка","овсянка","яйца","молоко","хлеб","мука","сахар","лук","морковь","капуста","курица","фарш","сосиски","сыр","творог","томаты","масло сливочное","масло подсолнечное"];
+var RAW="Овсянка на молоке|b|35|овсянка,молоко,сахар\nЯичница с хлебом|b|45|яйца,хлеб,масло подсолнечное\nСырники со сметаной|b|75|творог,яйца,мука,сахар\nБутерброды с сыром|b|55|хлеб,сыр,масло сливочное\nОмлет в микроволновке|b|50|яйца,молоко|m\nБлины|b|50|мука,молоко,яйца,масло подсолнечное\nГречневая каша с молоком|b|35|гречка,молоко,масло сливочное\nГорячие бутерброды|b|60|хлеб,сыр,сосиски|m\nГречка с курицей|l|110|гречка,курица,лук,морковь\nСуп с вермишелью|l|60|курица,картофель,морковь,лук,макароны\nБорщ|l|85|свёкла,капуста,картофель,морковь,лук\nМакароны по-флотски|l|95|макароны,фарш,лук\nПлов с курицей|l|120|рис,курица,морковь,лук\nГороховый суп|l|55|горох,картофель,морковь,лук\nПюре с сосисками|l|75|картофель,сосиски,молоко,масло сливочное\nРис с овощами|l|65|рис,морковь,лук,томаты|x\nКуриные бёдра с картошкой|d|130|курица,картофель,лук|o\nКотлеты с гречкой|d|105|фарш,гречка,лук,яйца,хлеб\nМакаронная запеканка|d|80|макароны,яйца,сыр,молоко|o\nЖареная картошка с луком|d|50|картофель,лук,масло подсолнечное\nТушёная капуста с сосисками|d|70|капуста,сосиски,морковь,лук,томаты\nРис с яйцом и овощами|d|55|рис,яйца,морковь,лук\nПаста с томатным соусом|d|65|макароны,томаты,сыр,лук\nОвощное рагу|d|60|картофель,капуста,морковь,лук,томаты\nРыба с рисом в духовке|d|145|рыба,рис,лук|o\nЛепёшка-пицца на сковороде|d|90|мука,сыр,томаты,колбаса";
+var R=RAW.split("\n").map(function(l){var p=l.split("|");return{n:p[0],m:p[1],c:+p[2],i:p[3].split(","),a:p[4]||""}});
+var KB={"Овсянка на молоке":[320,11,9,50],"Яичница с хлебом":[380,16,22,30],"Сырники со сметаной":[420,24,16,45],"Бутерброды с сыром":[360,14,19,32],"Омлет в микроволновке":[280,18,20,5],"Блины":[400,12,15,55],"Гречневая каша с молоком":[300,12,9,45],"Горячие бутерброды":[420,17,24,34],"Гречка с курицей":[480,38,12,53],"Суп с вермишелью":[260,17,8,29],"Борщ":[220,8,9,28],"Макароны по-флотски":[620,30,22,70],"Плов с курицей":[600,34,18,75],"Гороховый суп":[330,16,9,45],"Пюре с сосисками":[520,16,28,50],"Рис с овощами":[350,7,6,66],"Куриные бёдра с картошкой":[650,40,34,40],"Котлеты с гречкой":[640,34,28,60],"Макаронная запеканка":[520,22,20,62],"Жареная картошка с луком":[420,6,18,58],"Тушёная капуста с сосисками":[380,14,24,26],"Рис с яйцом и овощами":[450,15,10,75],"Паста с томатным соусом":[480,16,12,76],"Овощное рагу":[240,6,6,40],"Рыба с рисом в духовке":[520,32,12,65],"Лепёшка-пицца на сковороде":[560,22,24,62]};
+
+var RC={
+"Овсянка на молоке":[10,"Залейте молоком хлопья (на 1 порцию: 50 г хлопьев на 200 мл).|Варите 5-7 минут на среднем огне, помешивая.|Добавьте сахар и щепотку соли, накройте крышкой на 2 минуты."],
+"Яичница с хлебом":[10,"Разогрейте сковороду с маслом.|Разбейте яйца (2 на порцию), посолите.|Жарьте 3-4 минуты под крышкой, подайте с хлебом."],
+"Сырники со сметаной":[25,"Смешайте 500 г творога, 1 яйцо, 3 ст. л. сахара и 4 ст. л. муки.|Сформируйте лёгкие лепёшки, обваляйте в муке.|Жарьте на масле по 3 минуты с каждой стороны до золотистой корочки.|Подайте со сметаной."],
+"Бутерброды с сыром":[5,"Нарежьте хлеб, смажьте сливочным маслом.|Кладите ломтики сыра. Можно подсушить хлеб на сковороде."],
+"Омлет в микроволновке":[5,"Взбейте 2 яйца с 3 ст. л. молока и солью в глубокой кружке.|Готовьте 1 минуту на максимальной мощности, помешайте.|Доготовьте ещё 30-60 секунд до плотного состояния."],
+"Блины":[30,"Взбейте 2 яйца с щепоткой соли и 2 ст. л. сахара, влейте 500 мл молока.|Всыпьте 200 г муки, размешайте без комочков, добавьте 2 ст. л. масла.|Жарьте на раскалённой сковороде по 1 минуте с каждой стороны."],
+"Гречневая каша с молоком":[25,"Промойте гречку, залейте водой 1:2, посолите.|Варите 15-20 минут под крышкой на тихом огне.|Подайте с тёплым молоком и кусочком масла."],
+"Горячие бутерброды":[5,"На ломтик хлеба положите кружочки сосиски и сыр.|Грейте в микроволновке 30-40 секунд, пока сыр не расплавится."],
+"Гречка с курицей":[40,"Нарежьте курицу кубиками, обжарьте 10 минут с луком и морковью.|Добавьте промытую гречку, залейте водой на палец выше крупы.|Посолите, тушите под крышкой 15-20 минут, дайте постоять 5 минут."],
+"Суп с вермишелью":[45,"Сварите курицу в воде 25 минут, снимая пену.|Добавьте кубики картофеля, натёртую морковь и лук, варите 15 минут.|Всыпьте вермишель, варите по упаковке (3-5 минут), посолите."],
+"Борщ":[70,"Сварите бульон из мяса или возьмите просто воду.|Обжарьте лук, морковь и свёклу с томатной пастой 10 минут.|Картофель кладите в кипящий бульон, через 10 минут — капусту и зажарку.|Варите ещё 10-15 минут, подайте со сметаной."],
+"Макароны по-флотски":[30,"Сварите макароны до готовности, слейте воду.|Обжарьте лук, добавьте фарш, жарьте 10-12 минут, размывая комочки.|Посолите, поперчите, смешайте с макаронами."],
+"Плов с курицей":[60,"Обжарьте кусочки курицы в казане или кастрюле до корочки.|Добавьте лук и морковь соломкой, жарьте 7 минут.|Выложите промытый рис, залейте водой на 2 пальца выше риса, посолите.|Тушите под крышкой 20 минут на малом огне, не помешивая."],
+"Гороховый суп":[75,"Залейте горох водой на 3 часа (можно на ночь).|Отварите горох 40 минут, добавьте картофель.|Обжарьте морковь с луком и положите в суп, варите ещё 15 минут, посолите."],
+"Пюре с сосисками":[35,"Сварите картофель 20 минут, слейте воду, оставив немного.|Разомните толкушкой, добавьте тёплое молоко и масло.|Отварите или обжарьте сосиски и подайте с пюре."],
+"Рис с овощами":[40,"Нарежьте морковь, лук и томаты.|Выложите в мультиварку вместе с промытым рисом, добавьте масло и соль.|Залейте водой 1:2, включите режим «Рис» или «Крупы» на 30 минут."],
+"Куриные бёдра с картошкой":[60,"Вотрите в курицу соль, перец и масло, оставьте на 15 минут.|Картофель нарежьте дольками, лук кольцами, выложите на противень.|Сверху — курица. Запекайте при 200°C около 45-50 минут, поливая соком."],
+"Котлеты с гречкой":[50,"Фарш смешайте с репчатым луком, яйцом, мякишем хлеба, солью и перцем.|Сформируйте котлеты, жарьте по 5 минут с каждой стороны, затем 5 минут под крышкой.|Гречку варите 15-20 минут (вода 1:2) и подайте вместе."],
+"Макаронная запеканка":[45,"Сварите макароны на 2 минуты меньше указанного времени.|Взбейте яйца с молоком и солью, добавьте половину тёртого сыра.|Смешайте с макаронами, выложите в форму, посыпьте остатком сыра.|Пеките 25 минут при 180°C."],
+"Жареная картошка с луком":[30,"Картофель нарежьте соломкой, промойте от крахмала и просушите.|Жарьте на раскалённом масле 10 минут без крышки.|Добавьте лук, жарьте ещё 10 минут, солите в конце."],
+"Тушёная капуста с сосисками":[40,"Обжарьте лук и морковь, добавьте нарезанные сосиски.|Добавьте нашинкованную капусту и томаты, посолите.|Тушите под крышкой 25-30 минут, периодически перемешивая."],
+"Рис с яйцом и овощами":[30,"Отварите рис до готовности (15-18 минут).|Обжарьте лук и морковь до мягкости.|Добавьте рис, вбейте яйца и перемешайте 2-3 минуты, посолите."],
+"Паста с томатным соусом":[25,"Сварите макароны до «аль денте».|Обжарьте лук, добавьте нарезанные томаты, тушите 10 минут, посолите, добавьте щепотку сахара.|Смешайте с макаронами, посыпьте тёртым сыром."],
+"Овощное рагу":[40,"Нарежьте картофель кубиками, морковь и лук — помельче, капусту — соломкой.|Обжарьте лук и морковь 5 минут, добавьте картофель, капусту и томаты.|Залейте полстакана воды, посолите, тушите 25 минут под крышкой."],
+"Рыба с рисом в духовке":[45,"Отварите рис наполовину (8-10 минут).|Рыбу посолите, посыпьте перцем, положите на рис в форме с луком.|Накройте фольгой, пеките 25-30 минут при 190°C."],
+"Лепёшка-пицца на сковороде":[25,"Смешайте 200 г муки, 150 мл воды, щепотку соли, раскатайте в лепёшку.|Обжарьте с одной стороны 3 минуты, переверните.|Смажьте томатной пастой или нарезанными томатами, положите колбасу и сыр.|Держите под крышкой 5-7 минут на малом огне."]
+};
+
+var ML={b:"Завтрак",l:"Обед",d:"Ужин"};
+
+/* ── Магазины: [название, коэффициент, цвет, монограмма] ── */
+var ST=[
+["Пятёрочка",1.00,"#e4002b","П"],
+["Магнит",1.02,"#c8102e","М"],
+["Дикси",1.03,"#d99a00","Д"],
+["Лента",0.97,"#0b4ea2","Л"],
+["Ашан",0.98,"#e8620f","А"],
+["Метро",0.94,"#1a3a8f","МТ"],
+["Светофор",0.95,"#3b9b3f","С"],
+["Монетка",1.00,"#e30613","Мн"],
+["Верный",0.96,"#00a651","В"],
+["Ярче!",0.99,"#f36f21","Я"],
+["Мария-Ра",0.98,"#00539f","МР"],
+["Низкоцен",0.92,"#7a8b2f","Н"],
+["Fix Price",0.90,"#00a0e3","FP"],
+["Перекрёсток",1.12,"#2a9d4a","Пк"],
+["О'КЕЙ",1.08,"#e2001a","О"],
+["SPAR",1.10,"#009540","S"],
+["Глобус",1.05,"#e30613","Г"],
+["Самокат",1.15,"#ff3b30","См"],
+["ВкусВилл",1.30,"#5a9e1f","ВВ"],
+["Азбука Вкуса",1.45,"#003d2b","АВ"],
+["Billa",1.15,"#e30613","BL"],
+["Нетто",0.98,"#009846","Нт"],
+["Победа",0.93,"#c8102e","Пб"],
+["Командор",1.02,"#004b93","Км"],
+["Холидей",1.05,"#e2001a","Х"],
+["Доброцен",0.88,"#f39200","Дц"],
+["Сезон",1.08,"#7ab929","Сз"],
+["Абрикос",1.12,"#f7a600","Аб"],
+["Утконос",1.18,"#00a651","У"],
+["Ем",1.10,"#f36f21","Ем"],
+["Бахетле",1.25,"#b58b2a","Бх"]
+];
+
+/* ── API-конфиги магазинов ──
+   Ключ — название из ST. Поле url — базовый URL поиска (q = запрос).
+   path — где в ответе лежит массив товаров.
+   nameField — как называется поле с названием, priceField — с ценой.
+   Такие конфиги есть далеко не у всех сетей: у большинства закрытый API,
+   который без токена/сессии недоступен. Ниже — те, у которых есть хоть какой-то шанс. */
+var STORE_API={
+  "Магнит":{url:"https://web-gateway.magnit.ru/v2/goods/search?storeCode=0&q=",path:"goods",priceField:"price"},
+  "Пятёрочка":{url:"https://5ka.ru/api/v2/search/?q=",path:"products",priceField:"price"},
+  "Лента":{url:"https://lenta.com/api/v1/search/?searchString=",path:"items",priceField:"price"},
+  "Перекрёсток":{url:"https://www.perekrestok.ru/api/customer/1.4.1/catalog/search/products?text=",path:"content.products",priceField:"price"},
+  "Ашан":{url:"https://www.auchan.ru/api/v1/catalog/products/search?q=",path:"items",priceField:"price"},
+  "О'КЕЙ":{url:"https://www.okeydostavka.ru/api/v1/products?search=",path:"products",priceField:"price"},
+  "ВкусВилл":{url:"https://vkusvill.ru/api/v1/search?q=",path:"items",priceField:"price"},
+  "Самокат":{url:"https://samokat.ru/api/v3/products/search?q=",path:"products",priceField:"price"},
+  "Метро":{url:"https://www.metro-cc.ru/api/v1/products/search?q=",path:"items",priceField:"price"}
+  // У остальных сетей публичного JSON-поиска нет — онлайн-загрузка для них недоступна.
+};
+
+var $=function(s){return document.getElementById(s)};
+function num(id,d,lo,hi){var v=parseFloat($(id).value);if(isNaN(v))v=d;return Math.min(hi,Math.max(lo,v))}
+function checked(id){return Array.from(document.querySelectorAll("#"+id+" input:checked")).map(function(e){return e.value})}
+function fmt(n){return (Math.round(n/10)*10).toLocaleString("ru-RU")+" ₽"}
+function kstr(k,m){m=m||1;return Math.round(k[0]*m)+" ккал · Б "+Math.round(k[1]*m)+" · Ж "+Math.round(k[2]*m)+" · У "+Math.round(k[3]*m)}
+function pp(){return num("ad",2,1,10)+0.6*num("kd",0,0,10)}
+function kday(kt){
+  var on=$("kon").checked,all=$("kmode").value==="all",m=all?pp():1;
+  var h="КБЖУ за день: "+kstr(kt,m)+" ("+(all?"на всю семью":"на одного взрослого")+")";
+  if(!on)return h;
+  var t=[num("kc",2000,0,1e5),num("kp",100,0,1e4),num("kf",70,0,1e4),num("ku",250,0,1e4)];
+  var d=["ккал","Б","Ж","У"].map(function(n,i){
+    var x=Math.round(kt[i]*m-t[i]);
+    return '<span class="'+(Math.abs(x)<=t[i]*0.1?"ok":"bad")+'">'+n+" "+(x>0?"+":"")+x+"</span>";
+  }).join(", ");
+  return h+"<br>Разница с целью: "+d;
+}
+function rcp(r){
+  var v=RC[r.n];if(!v)return "";
+  return '<div class="rcp-head">⏱ ~'+v[0]+' мин · '+r.i.join(", ")+'</div>'+
+    '<ol>'+v[1].split("|").map(function(t){return "<li>"+t+"</li>"}).join("")+'</ol>'+
+    '<small>Количества указаны ориентировочно — подстройте под число порций.</small>';
+}
+
+/* ── Панель продуктов ── */
+$("pan").innerHTML=PAN.map(function(p,k){
+  return '<label class="chip"><input type="checkbox" value="'+p+'"'+(k<10?" checked":"")+'><span>'+p+'</span></label>';
+}).join("");
+
+/* ── Магазины ── */
+var storesEl=$("stores");
+storesEl.innerHTML=ST.map(function(s,k){
+  var hasApi=!!STORE_API[s[0]];
+  return '<label class="store'+(hasApi?" has-api":"")+'" title="'+(hasApi?"Есть публичный адрес для загрузки цен":"Публичного API нет — только средние цены")+'">'+
+    '<input type="radio" name="store" value="'+s[1]+'" data-name="'+s[0]+'"'+(k?"":" checked")+'>'+
+    '<span class="lg" style="background:'+s[2]+'">'+s[3]+'</span>'+
+    '<span class="nm">'+s[0]+'</span></label>';
+}).join("");
+function syncStores(){
+  Array.prototype.forEach.call(storesEl.children,function(el){
+    el.classList.toggle("on",el.querySelector("input").checked);
+  });
+}
+function currentStore(){
+  var inp=storesEl.querySelector("input[name=store]:checked");
+  if(!inp)return null;
+  return {name:inp.getAttribute("data-name"),coef:parseFloat(inp.value)};
+}
+storesEl.addEventListener("change",function(e){
+  if(e.target.name==="store"){
+    $("st").value=e.target.value;
+    syncStores();
+    // при смене магазина сбрасываем онлайн-цены — они были из другой сети
+    if(Object.keys(onlinePrices).length){
+      onlinePrices={};
+      $("onlineTag").style.display="none";
+      var st=$("onlineStatus");
+      st.className="online-status warn";
+      st.textContent="Магазин изменён — онлайн-цены от прошлой сети сброшены. Нажмите «Обновить», чтобы загрузить из новой.";
+      if(S.slots)build();
+    }
+  }
+});
+syncStores();
+
+var S={};
+var onlinePrices={};
+
+/* ── Стоимость блюда с учётом онлайн-цен ── */
+function cost(r){
+  var pan=new Set(checked("pan"));
+  var mult=parseFloat($("st").value);
+  var ppl=pp();
+  var n=r.i.filter(function(x){return !pan.has(x)}).length;
+  var base=r.c*ppl*mult*n/r.i.length;
+  if(Object.keys(onlinePrices).length>0){
+    var ratios=[];
+    r.i.forEach(function(ing){
+      if(!pan.has(ing)&&onlinePrices[ing]){
+        var localEst=r.c*mult/r.i.length*3;
+        if(localEst>0) ratios.push(onlinePrices[ing]/localEst);
+      }
+    });
+    if(ratios.length){
+      var avg=ratios.reduce(function(a,b){return a+b},0)/ratios.length;
+      avg=Math.max(0.5,Math.min(2.0,avg));
+      base*=avg;
+    }
+  }
+  return base;
+}
+
+/* ── Построение меню ── */
+function build(){
+  var D=num("days",7,1,14),B=num("bud",5000,100,1e7);
+  var ppl=pp(),mult=parseFloat($("st").value),pan=new Set(checked("pan")),ap=new Set(checked("app")),ms=checked("meals");
+  if(!ms.length){alert("Выберите хотя бы один приём пищи");return}
+  ms=["b","l","d"].filter(function(m){return ms.indexOf(m)>-1});
+  var pool={};
+  ms.forEach(function(m){
+    pool[m]=R.filter(function(r){return r.m===m&&(!r.a||ap.has(r.a))});
+  });
+  var slots=[],hist={b:[],l:[],d:[]};
+  for(var d=0;d<D;d++)ms.forEach(function(m){
+    var p=pool[m].filter(function(r){return hist[m].indexOf(r)<0});
+    if(!p.length)p=pool[m];
+    var r=p[Math.floor(Math.random()*p.length)];
+    hist[m].push(r);if(hist[m].length>3)hist[m].shift();
+    slots.push({d:d,m:m,r:r});
+  });
+  var total=function(){return slots.reduce(function(s,x){return s+cost(x.r)},0)};
+  for(var g=0;g<800&&total()>B;g++){
+    var w=null;
+    slots.forEach(function(s){
+      var cs=cost(s.r);
+      if(pool[s.m].some(function(r){return cost(r)<cs-1})&&(!w||cs>cost(w.r)))w=s;
+    });
+    if(!w)break;
+    var cur=cost(w.r);
+    var opts=pool[w.m].filter(function(r){return cost(r)<cur-1})
+      .sort(function(a,b){return cost(a)-cost(b)}).slice(0,3);
+    w.r=opts[Math.floor(Math.random()*opts.length)];
+  }
+  var shop={},tot=0;
+  slots.forEach(function(s){
+    s.r.i.forEach(function(x){
+      if(!pan.has(x)){
+        var v=s.r.c*ppl*mult/s.r.i.length;
+        shop[x]=(shop[x]||0)+v;tot+=v;
+      }
+    });
+  });
+  var own=new Set();
+  slots.forEach(function(s){
+    s.r.i.forEach(function(x){if(pan.has(x))own.add(x)});
+  });
+  S={slots:slots,shop:shop,tot:tot,own:Array.from(own),D:D,B:B,ms:ms};
+  render();
+}
+
+/* ── Рендер ── */
+function render(){
+  var s=S,days=[];
+  for(var d=0;d<s.D;d++){
+    var dc=0,kt=[0,0,0,0];
+    var rows=s.slots.filter(function(x){return x.d===d}).map(function(x){
+      var c=cost(x.r),k=KB[x.r.n]||[0,0,0,0];dc+=c;
+      for(var j=0;j<4;j++)kt[j]+=k[j];
+      return '<details class="meal-box"><summary class="meal"><i class="mtag">'+ML[x.m]+'</i>'+
+        '<span class="mn">'+x.r.n+'<small>'+kstr(k)+'</small></span><em>'+fmt(c)+'</em></summary>'+
+        '<div class="rcp">'+rcp(x.r)+'</div></details>';
+    }).join("");
+    days.push('<div class="day"><div class="day-h"><b>День '+(d+1)+'</b><span>'+fmt(dc)+'</span></div>'+
+      rows+'<div class="kb">'+kday(kt)+'</div></div>');
+  }
+  $("plan").innerHTML=days.join("");
+
+  var items=Object.keys(s.shop).sort(function(a,b){return s.shop[b]-s.shop[a]});
+  $("shop").innerHTML=items.map(function(k){
+    return '<li><label><input type="checkbox" data-k="'+k+'"><span>'+k+'</span></label><span class="pr">~'+fmt(s.shop[k])+'</span></li>';
+  }).join("")||'<li class="empty">Всё нужное уже есть дома 🎉</li>';
+  bar();
+
+  $("own").textContent=s.own.length?"Уже есть дома: "+s.own.join(", "):"";
+  $("tot").textContent=fmt(s.tot);
+
+  var ok=s.tot<=s.B+5,rest=s.B-s.tot;
+  $("stat").innerHTML=ok?'<span class="pill ok">✓ В бюджете</span>':'<span class="pill bad">Дороже бюджета</span>';
+  var pb=$("progbar");
+  pb.style.width=Math.min(100,s.tot/s.B*100)+"%";
+  pb.style.background=ok?"linear-gradient(90deg,var(--ac),#7ed957)":"linear-gradient(90deg,var(--wa),#e08b4a)";
+  $("budmeta").textContent=ok
+    ?"Бюджет "+fmt(s.B)+" · останется "+fmt(rest)
+    :"Бюджет "+fmt(s.B)+" · не хватает "+fmt(-rest)+". Это самый дешёвый вариант из доступных блюд.";
+
+  $("res").style.display="block";
+}
+
+function bar(){
+  var got=0;
+  document.querySelectorAll("#shop input").forEach(function(c){
+    var k=c.getAttribute("data-k");
+    var li=c.closest("li");
+    if(li)li.classList.toggle("dn",c.checked);
+    if(c.checked)got+=S.shop[k];
+  });
+  var left=S.tot-got,rest=S.B-S.tot;
+  $("bar").innerHTML=
+    '<div><span>Всего в списке</span><b>'+fmt(S.tot)+'</b></div>'+
+    '<div><span>Уже куплено</span><b>'+fmt(got)+'</b></div>'+
+    '<div><span>Осталось купить</span><b>'+fmt(left)+'</b></div>'+
+    '<div class="tot-line"><span>'+(rest>=0?"Останется от бюджета":"Не хватает до бюджета")+
+    '</span><b class="'+(rest>=0?"ok":"bad")+'">'+fmt(Math.abs(rest))+'</b></div>';
+}
+$("shop").addEventListener("change",bar);
+
+function rr(){if(S.slots)render()}
+$("kon").onchange=function(){$("kbox").style.display=this.checked?"block":"none";rr()};
+$("kbox").addEventListener("input",rr);
+$("kmode").onchange=function(){
+  var f=this.value==="all"?pp():1/pp();
+  ["kc","kp","kf","ku"].forEach(function(id){$(id).value=Math.round(num(id,0,0,1e5)*f)});
+  rr();
+};
+$("go").onclick=function(){build();$("res").scrollIntoView({behavior:"smooth",block:"start"})};
+$("re").onclick=build;
+$("cp").onclick=function(){
+  var t="Список покупок (~"+fmt(S.tot)+"):\n"+Object.keys(S.shop).map(function(k){return "- "+k+" ~"+fmt(S.shop[k])}).join("\n");
+  var b=$("cp");
+  function done(){b.textContent="Скопировано ✓";setTimeout(function(){b.textContent="Скопировать список"},1500)}
+  try{navigator.clipboard.writeText(t).then(done,function(){prompt("Скопируйте список:",t)})}catch(e){prompt("Скопируйте список:",t)}
+};
+
+/* ── Онлайн-загрузка ИМЕННО из выбранного магазина ── */
+function getPath(obj,path){
+  return path.split(".").reduce(function(o,k){return o&&o[k]!=null?o[k]:null},obj);
+}
+$("onlineBtn").addEventListener("click", async function(){
+  var btn=this,status=$("onlineStatus"),tag=$("onlineTag"),tagText=$("onlineTagText");
+  var store=currentStore();
+  if(!store){status.className="online-status err";status.textContent="Сначала выберите магазин.";return}
+
+  var api=STORE_API[store.name];
+  if(!api){
+    status.className="online-status err";
+    status.textContent="Для сети «"+store.name+"» нет публичного API — цены подтянуть неоткуда. Используются средние × коэффициент ("+store.coef.toFixed(2)+").";
+    return;
+  }
+
+  btn.disabled=true;
+  tag.style.display="none";
+  status.className="online-status loading";
+  status.textContent="Пробуем загрузить цены из «"+store.name+"»… Это может занять 10–20 секунд.";
+
+  var pan=new Set(checked("pan"));
+  var need=new Set();
+  R.forEach(function(r){r.i.forEach(function(i){if(!pan.has(i))need.add(i)})});
+  var items=Array.from(need).slice(0,8); // ограничим для скорости
+  var results={},ok=0,failReason="";
+
+  for(var i=0;i<items.length;i++){
+    var item=items[i];
+    try{
+      var target=api.url+encodeURIComponent(item);
+      // публичный прокси для обхода CORS
+      var proxy="https://api.allorigins.win/raw?url="+encodeURIComponent(target);
+      var res=await fetch(proxy,{headers:{"Accept":"application/json"}});
+      if(!res.ok){failReason="HTTP "+res.status;continue}
+      var data=await res.json();
+      var list=getPath(data,api.path)||data.products||data.items||data.goods||[];
+      if(list.length){
+        var g=list[0];
+        var price=g[api.priceField]||g.price||g.oldPrice||g.minPrice||0;
+        if(typeof price==="number"&&price>1000)price/=100;
+        if(price>0){results[item]=Math.round(price);ok++}
+      }
+    }catch(e){
+      failReason=e.message||"сеть/CORS";
+    }
+  }
+
+  if(ok>0){
+    onlinePrices=results;
+    status.className="online-status ok";
+    status.textContent="✓ Получено "+ok+" цен из «"+store.name+"». Используются в расчёте.";
+    tag.style.display="inline-flex";
+    tagText.textContent="Онлайн: "+store.name+" · "+ok+" цен";
+    if(S.slots)build();
+  }else{
+    status.className="online-status err";
+    status.textContent="Не удалось получить цены из «"+store.name+"»"+(failReason?" ("+failReason+")":"")+". Сеть блокирует автоматические запросы или сменила адрес API. Остаёмся на средних ценах.";
+    onlinePrices={};
+  }
+  btn.disabled=false;
+});
+</script>
+</body>
+</html>
